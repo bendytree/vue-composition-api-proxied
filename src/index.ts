@@ -4,9 +4,10 @@ declare const VueCompositionAPI:any;
 
 const proxyKey = '__is_proxy';
 
+/* istanbul ignore next */
 const peerDependencies = {
   Vue: typeof Vue === 'undefined' ? { set:(a:any, b:string, c:any) => a[b] = c } : Vue,
-  VueCompositionAPI: typeof VueCompositionAPI === 'undefined' ? { reactive:a => a } : VueCompositionAPI,
+  VueCompositionAPI: typeof VueCompositionAPI === 'undefined' ? { reactive:(a:any) => a } : VueCompositionAPI,
 };
 
 const proxyConfig = {
