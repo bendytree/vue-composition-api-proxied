@@ -37,7 +37,8 @@
     }
   },
   "peerDependencies": {
-    "vue": "*"
+    "vue": "*",
+    "@vue/composition-api": "*"
   },
   "devDependencies": {
     "@types/jest": "26.0.15",
