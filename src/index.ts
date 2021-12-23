@@ -1,9 +1,13 @@
 
 declare const Vue:any;
+declare const VueCompositionAPI:any;
 
 const proxyKey = '__is_proxy';
 
-const v:any = typeof Vue === 'undefined' ? { set:(a:any, b:string, c:any) => a[b] = c } : Vue;
+const peerDependencies = {
+  Vue: typeof Vue === 'undefined' ? { set:(a:any, b:string, c:any) => a[b] = c } : Vue,
+  VueCompositionAPI: typeof VueCompositionAPI === 'undefined' ? { reactive:a => a } : VueCompositionAPI,
+};
 
 const proxyConfig = {
   get: function (target:any, prop:string) {
@@ -11,7 +15,7 @@ const proxyConfig = {
     return target[prop];
   },
   set: function (target:any, prop:string, value:any) {
-    v.set(target, prop, proxied(value));
+    peerDependencies.Vue.set(target, prop, proxied(value));
     return true;
   }
 };
@@ -52,6 +56,6 @@ export const proxied = (obj: any) => {
   }
 
   // Create proxy
-  return new Proxy(obj, proxyConfig);
+  return peerDependencies.VueCompositionAPI.reactive(new Proxy(obj, proxyConfig));
 };
 
