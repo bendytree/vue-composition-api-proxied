@@ -3,6 +3,7 @@ declare const Vue:any;
 declare const VueCompositionAPI:any;
 
 const proxyKey = '__is_proxy';
+const noProxyKey = '__no_proxy';
 
 /* istanbul ignore next */
 const peerDependencies = {
@@ -46,6 +47,7 @@ export const proxied = (obj: any) => {
   // Only objects get proxied
   if (!obj) return obj;
   if (typeof obj !== 'object') return obj;
+  if (obj[noProxyKey] === true) return obj;
 
   // Run other skip checks
   const skip = skips.find(s => s.test(obj));
@@ -60,3 +62,7 @@ export const proxied = (obj: any) => {
   return peerDependencies.VueCompositionAPI.reactive(new Proxy(obj, proxyConfig));
 };
 
+export const noproxy = <T>(obj: T):T => {
+  Object.defineProperty(obj, noProxyKey, { value: true, enumerable: false });
+  return obj;
+};
