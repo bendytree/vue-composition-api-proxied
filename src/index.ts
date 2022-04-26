@@ -49,6 +49,10 @@ export const proxied = (obj: any) => {
   if (typeof obj !== 'object') return obj;
   if (obj[noProxyKey] === true) return obj;
 
+  // No promises
+  const proto = Object.prototype.toString.call(obj);
+  if (proto == '[object Promise]') return obj;
+
   // Run other skip checks
   const skip = skips.find(s => s.test(obj));
   if (skip) return obj;

@@ -25,6 +25,14 @@ for (const skip of skips) {
   });
 }
 
+test(`Promise should not be wrapped`, async () => {
+  const prom = Promise.resolve(8);
+  const promProxied = proxied(prom);
+  expect(prom).toStrictEqual(promProxied);
+  const result = await promProxied;
+  expect(result).toStrictEqual(8);
+});
+
 test(`NaN should not be wrapped`, () => {
   const result = proxied(NaN);
   expect(typeof result).toStrictEqual('number');

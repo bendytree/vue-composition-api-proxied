@@ -63,7 +63,7 @@ See tests for details on how it works, but quick tips:
 
    * Works on objects and arrays
    * Also proxies sub-elements, even if they're added later
-   * Currently does not proxy `Map`, `Set`, `RegExp`, `Date` (those are left as-is)
+   * Currently does not proxy `Map`, `Set`, `RegExp`, `Date`, `Promise` (those are left as-is)
    * PRs with test coverage welcome
 
 
