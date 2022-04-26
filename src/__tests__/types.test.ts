@@ -1,4 +1,4 @@
-import {isProxied, noproxy, proxied, skips } from '..';
+import {isProxied, noProxy, proxied, skips } from '..';
 
 const examples = [
   { name: 'Plain Object', example: {}, wrap: true },
@@ -34,7 +34,7 @@ test(`NaN should not be wrapped`, () => {
 test(`No-proxy prevents a prop from being proxied`, () => {
   const obj = proxied({ x: { } } as any);
   obj.y = {};
-  obj.z = noproxy({a:9});
+  obj.z = noProxy({a:9});
   expect(isProxied(obj)).toStrictEqual(true);
   expect(isProxied(obj.x)).toStrictEqual(true);
   expect(isProxied(obj.y)).toStrictEqual(true);

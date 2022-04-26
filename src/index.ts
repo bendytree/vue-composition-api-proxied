@@ -62,7 +62,7 @@ export const proxied = (obj: any) => {
   return peerDependencies.VueCompositionAPI.reactive(new Proxy(obj, proxyConfig));
 };
 
-export const noproxy = <T>(obj: T):T => {
+export const noProxy = <T>(obj: T):T => {
   Object.defineProperty(obj, noProxyKey, { value: true, enumerable: false });
   return obj;
 };
