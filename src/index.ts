@@ -17,7 +17,9 @@ const proxyConfig = {
     return target[prop];
   },
   set: function (target:any, prop:string, value:any) {
-    peerDependencies.Vue.set(target, prop, proxied(value));
+    // peerDependencies.Vue.set(target, prop, proxied(value));
+    target[prop] = proxied(value);
+    target?.__ob__?.dep?.notify?.();
     return true;
   }
 };
