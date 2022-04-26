@@ -1,6 +1,6 @@
 {
   "name": "vue-composition-api-proxied",
-  "version": "1.2",
+  "version": "1.2.0",
   "description": "A proxy-based alternative to reactive in Vue 2 / Vue Composition API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
