@@ -2,8 +2,8 @@
 declare const Vue:any;
 declare const VueCompositionAPI:any;
 
-const proxyKey = '__is_proxy';
-const noProxyKey = '__no_proxy';
+const proxyKey = '__VueCompositionApiProxied__is_proxy';
+const noProxyKey = '__VueCompositionApiProxied__no_proxy';
 
 /* istanbul ignore next */
 const peerDependencies = {
@@ -13,7 +13,6 @@ const peerDependencies = {
 
 const proxyConfig = {
   get: function (target:any, prop:string) {
-    if (prop === proxyKey) return true;
     return target[prop];
   },
   set: function (target:any, prop:string, value:any) {
@@ -35,6 +34,10 @@ export const isProxied = (obj: any) => {
 };
 
 export const skips:ISkip[] = [
+  { name: 'Null or Undefined', test: obj => obj === null || obj === undefined, example: null },
+  { name: 'Non Objects', test: obj => typeof obj !== 'object', example: 23 },
+  { name: 'Already Proxied', test: obj => obj[noProxyKey] === true, example: { [proxyKey]: true } },
+  { name: 'No Proxy', test: obj => obj[noProxyKey] === true, example: { [noProxyKey]: true } },
   { name: 'Function', test: obj => obj instanceof Function, example: () => null },
   { name: 'Date', test: obj => obj instanceof Date, example: new Date() },
   { name: 'RegExp //', test: obj => obj instanceof RegExp, example: /foo/ },
@@ -43,21 +46,16 @@ export const skips:ISkip[] = [
   { name: 'Map', test: obj => obj instanceof Map, example: new Map() },
   { name: 'Set', test: obj => obj instanceof Set, example: new Set() },
   { name: 'Proxy', test: obj => isProxied(obj), example: new Proxy({}, {}) },
+  { name: 'Promise', test: obj => Object.prototype.toString.call(obj) === '[object Promise]', example: new Promise(() => {}) },
 ];
 
 export const proxied = (obj: any) => {
-  // Only objects get proxied
-  if (!obj) return obj;
-  if (typeof obj !== 'object') return obj;
-  if (obj[noProxyKey] === true) return obj;
-
-  // No promises
-  const proto = Object.prototype.toString.call(obj);
-  if (proto == '[object Promise]') return obj;
-
-  // Run other skip checks
+  // Skip
   const skip = skips.find(s => s.test(obj));
   if (skip) return obj;
+
+  // Do not re-proxy (future call or for circular references)
+  Object.defineProperty(obj, proxyKey, { value: true, enumerable: false });
 
   // Convert children
   for (const key in obj) {

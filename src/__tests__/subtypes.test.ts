@@ -40,9 +40,9 @@ test(`push is proxied`, () => {
   proxiedUsers.push(user);
   expect(users.length).toStrictEqual(1);
   expect(proxiedUsers.length).toStrictEqual(1);
-  expect(isProxied(users)).toStrictEqual(false);
+  expect(isProxied(users)).toStrictEqual(true);
   expect(isProxied(proxiedUsers)).toStrictEqual(true);
-  expect(isProxied(user)).toStrictEqual(false);
+  expect(isProxied(user)).toStrictEqual(true);
   // @ts-ignore
   expect(isProxied(proxiedUsers[0])).toStrictEqual(true);
 });
