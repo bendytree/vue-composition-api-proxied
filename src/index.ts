@@ -46,7 +46,7 @@ export const skips:ISkip[] = [
   { name: 'Map', test: obj => obj instanceof Map, example: new Map() },
   { name: 'Set', test: obj => obj instanceof Set, example: new Set() },
   { name: 'Proxy', test: obj => isProxied(obj), example: new Proxy({}, {}) },
-  { name: 'Promise', test: obj => Object.prototype.toString.call(obj) === '[object Promise]', example: new Promise(() => {}) },
+  { name: 'Promise', test: obj => Object.prototype.toString.call(obj) === '[object Promise]', example: Promise.resolve },
 ];
 
 export const proxied = (obj: any) => {
