@@ -62,18 +62,6 @@ export const proxied = (obj: any) => {
     obj[key] = proxied(obj[key]);
   }
 
-  // Create proxy
-  if (Array.isArray(obj)){
-    const reactiveObj = peerDependencies.VueCompositionAPI.reactive({});
-    Object.defineProperty(obj, '__ob__', {
-      enumerable: false,
-      value(this:any[]) {
-        return reactiveObj.__ob__;
-      },
-    })
-    return new Proxy(obj, proxyConfig);
-  }
-
   return peerDependencies.VueCompositionAPI.reactive(new Proxy(obj, proxyConfig));
 };
 
