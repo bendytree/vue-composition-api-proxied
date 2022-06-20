@@ -22,18 +22,6 @@ const proxyConfig = {
     return true;
   }
 };
-const arrayProxyConfig = {
-  get: function (target:any, prop:string) {
-    if (prop === '__ob__') return target[prop];
-    return target.arr[prop];
-  },
-  set: function (target:any, prop:string, value:any) {
-    // peerDependencies.Vue.set(target, prop, proxied(value));
-    target.arr[prop] = proxied(value);
-    target?.__ob__?.dep?.notify?.();
-    return true;
-  }
-};
 
 export interface ISkip {
   name: string;
@@ -76,8 +64,14 @@ export const proxied = (obj: any) => {
 
   // Create proxy
   if (Array.isArray(obj)){
-    const proxy = new Proxy({ arr: obj }, arrayProxyConfig);
-    return peerDependencies.VueCompositionAPI.reactive(proxy);
+    const reactiveObj = peerDependencies.VueCompositionAPI.reactive({});
+    Object.defineProperty(obj, '__ob__', {
+      enumerable: false,
+      value(this:any[]) {
+        return reactiveObj.__ob__;
+      },
+    })
+    return new Proxy(obj, proxyConfig);
   }
 
   return peerDependencies.VueCompositionAPI.reactive(new Proxy(obj, proxyConfig));
