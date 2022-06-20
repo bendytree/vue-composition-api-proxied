@@ -47,3 +47,21 @@ test(`push is proxied`, () => {
   expect(isProxied(proxiedUsers[0])).toStrictEqual(true);
 });
 
+test(`splice (remove) is proxied`, () => {
+  const users = ['Bill', 'Jane'];
+  const proxiedUsers = proxied(users);
+  proxiedUsers.splice(0, 1);
+  expect(users.length).toStrictEqual(1);
+  expect(proxiedUsers.length).toStrictEqual(1);
+  expect(isProxied(users)).toStrictEqual(true);
+  expect(isProxied(proxiedUsers)).toStrictEqual(true);
+  expect(users[0]).toStrictEqual('Jane');
+});
+
+test(`splice (insert) is proxied`, () => {
+  const users = ['Bill', 'Jane'];
+  const proxiedUsers = proxied(users);
+  proxiedUsers.splice(1, 0, 'Kim');
+  expect(proxiedUsers.length).toStrictEqual(3);
+});
+
